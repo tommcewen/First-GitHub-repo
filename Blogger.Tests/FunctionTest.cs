@@ -78,7 +78,7 @@ namespace Blogger.Tests
             Assert.Equal(200, response.StatusCode);
 
             Blog[] blogPosts = JsonConvert.DeserializeObject<Blog[]>(response.Body);
-			Assert.Single(blogPosts);
+            Assert.Single(blogPosts);
             Assert.Equal(myBlog.Name, blogPosts[0].Name);
             Assert.Equal(myBlog.Content, blogPosts[0].Content);
 

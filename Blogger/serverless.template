@@ -24,12 +24,23 @@
         "Description" : "Write capacity for the DynamoDB blog table.",
         "Default" : "3",
         "MinValue" : 1
+    },
+    "VpcId" : {
+      "Type" : "AWS::EC2::VPC::Id",
+      "Description" : "VPCId of Virtual Private Cloud (VPC).",
+      "Default" : "vpc-02916f7a"
+      },
+    "VpcSubnet": {
+      "Description" : "SubnetId in VPC",
+      "Type" : "AWS::EC2::Subnet::Id",
+      "Default" : "subnet-fc5226b7"
     }
+
   },
 
   "Conditions" : {
     "CreateBlogTable" : {"Fn::Equals" : [{"Ref" : "ShouldCreateTable"}, "true"]},
-	  "TableNameGenerated" : {"Fn::Equals" : [{"Ref" : "BlogTableName"}, ""]}
+      "TableNameGenerated" : {"Fn::Equals" : [{"Ref" : "BlogTableName"}, ""]}
   },
 
   "Resources" : {
@@ -50,6 +61,12 @@
             "BlogTable" : { "Fn::If" : ["CreateBlogTable", {"Ref":"BlogTable"}, { "Ref" : "BlogTableName" } ] }
           }
         },
+        "VpcConfig" : {
+            "SecurityGroupIds": [
+                     "sg-b3aaa0c3"
+            ],
+            "SubnetIds": [{ "Ref" : "VpcSubnet" }]
+            },
         "Events": {
           "PutResource": {
             "Type": "Api",
@@ -90,7 +107,6 @@
       }
     },
     
-
     "AddBlog" : {
       "Type" : "AWS::Serverless::Function",
       "Properties": {
